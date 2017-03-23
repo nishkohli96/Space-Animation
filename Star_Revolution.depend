@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1490306261 source:e:\computer_graphics_codes\star_revolution\main.c
+	<stdlib.h>
+	<GL/glut.h>
+	<stdio.h>
+	<math.h>
+
