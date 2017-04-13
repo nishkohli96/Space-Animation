@@ -4,11 +4,13 @@
 #include<stdio.h>
 #include<math.h>
 float rAngle  = 0.0;
-float translate=0.0;
+float translate=1.0,translate2;
 float i;
 int j;
 #define PI 3.1415926535898
 
+void dayScene();
+void nightScene();
 
   void handleKeypress(unsigned char key, int x, int y) {
 	switch (key) {
@@ -36,19 +38,37 @@ int j;
       if(rAngle > 360){
          rAngle -= 360;
         }
-        translate-= 0.01;
-         if( translate <=- 2.2)
+         if( translate >=- 2.2)
             {
-                 translate += 0.01;
+                 translate-= 0.01;
+            }
+            else
+            {
+               glutDisplayFunc(dayScene);
+               translate=2.5;
+            }
+
+             if( translate2 <= 2.2)
+            {
+                 translate2 += 0.01;
+            }
+            else
+            {
+                glutDisplayFunc(nightScene);
+                translate2= -2.0;
             }
             glutPostRedisplay();
        glutTimerFunc(25,update,0);
 
             }
 
+    void workspace()
+    {
+        nightScene();
+    }
+    void nightScene() {
 
-
-    void drawScene() {
+        glClearColor(0.0,0.0,0.0,1.0);
 	    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
@@ -65,7 +85,7 @@ int j;
         glEnd();
         glutSwapBuffers();
 
-    //Drawing the sun
+    //Drawing the moon
 
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
@@ -263,11 +283,107 @@ int j;
         glutSwapBuffers();
 }
 
+void dayScene()
+{
+        glClearColor(0.8,0.8,1.0,1.0);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+        glTranslated(0,-1.0,0);
+
+	// Drawing  the center planet
+
+        glColor3d(0.0,0.0,1.0);
+        glBegin(GL_POINTS);
+        for(j=0;j<1000;++j)
+            {
+             glVertex2d(0.65 * cos(3.14159*j/1000.0),0.65 * sin(3.14159*j/1000.0));
+            }
+        glEnd();
+        glutSwapBuffers();
+
+    //Drawing the sun
+
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+
+        glTranslated(0.0,-0.85,0);
+        glColor3d(1.0,1.0,0.0);
+
+      // Rotation of the sun
+        glRotatef(rAngle, 0.0f, 0.0f, 1.0f);
+
+
+        glTranslated(0.3,-0.85,0);
+
+        glBegin(GL_POINTS);
+        for(j=0;j<1000;++j)
+          {
+           glVertex2d(0.08* cos(2*3.14159*j/1000.0),0.08 * sin(2*3.14159*j/1000.0));
+          }
+
+        glEnd();
+        glFlush();
+        glutSwapBuffers();
+
+
+
+//  Drawing the rocket front end
+
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+
+        glTranslatef( translate2,0,0 );
+        glColor3d(1.0,0.0,0.0);
+        glTranslated(0.5,-0.1,0);
+        glBegin(GL_POLYGON);
+        glVertex2f(-1.2,0.8);
+        glVertex2f(-1.28,0.87);
+        glVertex2f(-1.28,0.73);
+        glEnd();
+        glFlush();
+        glutSwapBuffers();
+
+    //  Drawing the rocket rear end
+
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+        glTranslatef( translate2,0,0 );
+        glColor3d(1.0,0.0,1.0);
+        glTranslated(0.5,-0.1,0);
+        glBegin(GL_POLYGON);
+        glVertex2f(-1.28,0.84);
+        glVertex2f(-1.36,0.84);
+        glVertex2f(-1.36,0.76);
+        glVertex2f(-1.28,0.76);
+        glEnd();
+        glFlush();
+        glutSwapBuffers();
+
+    // Drawing the rocket fumes
+
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+        glTranslatef( translate2,0,0 );
+        glColor3d(1.0,0.5,0.0);
+        glTranslated(0.5,-0.1,0);
+        glBegin(GL_LINES);
+        glVertex2f(-1.36,0.83);
+        glVertex2f(-1.42,0.85);
+        glVertex2f(-1.36,0.80);
+        glVertex2f(-1.42,0.80);
+        glVertex2f(-1.36,0.77);
+        glVertex2f(-1.42,0.75);
+        glEnd();
+        glFlush();
+        glutSwapBuffers();
+
+
+}
 
 
 
  void Init(){
-    glClearColor(0.0,0.0,0.0,1.0);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glOrtho(-1.0,1.0,-1.0,1.0,-1.0,1.0);
@@ -282,9 +398,10 @@ int main(int argc, char** argv)
 	glutCreateWindow("The Stars and The Sun");
 	Init();
 	initRendering();
-	glutDisplayFunc(drawScene);
+	glutDisplayFunc(workspace);
 	glutKeyboardFunc(handleKeypress);;
 	glutTimerFunc(2,update,0);
 	glutMainLoop();
     return 0;
 }
+
