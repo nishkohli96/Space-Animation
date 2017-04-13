@@ -15,14 +15,14 @@ void nightScene();
   void handleKeypress(unsigned char key, int x, int y) {
 	switch (key) {
 		case 'f':
-			translate-=0.1;
+			translate-=0.1;   //fast movement of the rocket
 			translate2+=0.1;
 			break;
 		case 'e':
-            exit(0);
+            exit(0);         //exit the program
             break;
           case 'p':
-            rAngle+=10;
+            rAngle+=10;   //the planet spins faster
             break;
 	  }
    }
