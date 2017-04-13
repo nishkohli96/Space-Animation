@@ -14,8 +14,16 @@ void nightScene();
 
   void handleKeypress(unsigned char key, int x, int y) {
 	switch (key) {
-		case 27:
-			exit(0);
+		case 'f':
+			translate-=0.1;
+			translate2+=0.1;
+			break;
+		case 'e':
+            exit(0);
+            break;
+          case 'p':
+            rAngle+=10;
+            break;
 	  }
    }
 
